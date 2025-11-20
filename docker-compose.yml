@@ -1,7 +1,7 @@
 services:
   nestjs:
     container_name: nestjs
-    image: nestjs:1.0.2
+    image: nestjs:1.0.3
     build:
       context: .
       dockerfile: DockerFile
@@ -10,7 +10,7 @@ services:
       - 3000:3000
     command: ' node ./dist/main.js'
     healthcheck:
-      test: ['curl', 'http://localhost:3000/']
+      test: 'curl http://localhost:3000/'
       interval: 1m30s
       timeout: 30s
       retries: 5
