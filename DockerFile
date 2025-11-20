@@ -1,0 +1,28 @@
+# Use the slim Node.js 20 image as the base layer
+FROM node:20-slim
+LABEL maintainer="it241507@ustp-students.at"
+
+# Prevent interactive prompts during apt operations
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Refresh package lists and apply base image security updates
+RUN apt update && apt upgrade -y
+
+
+# Set working directory for subsequent commands
+WORKDIR /usr/src/app
+
+# Install specific npm version and global TypeORM CLI
+RUN npm i -g npm@11 typeorm
+
+# Copy package manifests separately to leverage Docker layer caching
+COPY package*.json ./
+
+# Install dependencies with clean, repeatable node_modules layout
+RUN npm ci
+
+# Copy application source and configuration into the container
+COPY . .
+
+# Compile the NestJS project to production-ready artifacts
+RUN npm run build
